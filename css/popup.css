@@ -1,0 +1,30 @@
+body {
+    width: 16em;
+    margin: 0px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid grey;
+}
+
+div {
+    width: 16em;
+    padding: 3px;
+}
+
+div.setting {
+    margin-top: 15px;
+    text-align: center;
+}
+
+label {
+    display: inline-block;
+    width: 8em;
+    cursor: pointer;
+    position: relative;
+}
+
+input {
+    display: inline-block;
+    width: 4em;
+    text-align: right;
+}

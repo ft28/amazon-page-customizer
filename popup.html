@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./css/popup.css">
+</head>
+
+<body>
+    <h3>Amazon Paze Customizer</h3>
+    <div>
+        <div>
+            <label for="wishlist">中古価格表示</label>
+            <input name="wishlist" id="wishlist" type="checkbox" checked="checked" />
+        </div>
+
+        <div>
+            <label for="searchlink">検索リンク表示</label>
+            <input name="searchlink" id="searchlink" type="checkbox" checked="checked" />
+        </div>
+
+        <div>
+            <label for="num_parallels">同時アクセス数</label>
+            <input name="num_parallels" id="num_parallels" type="number" />
+        </div>
+
+        <div>
+            <label for="interval">取得間隔(秒)</label>
+            <input name="interval" id="interval" type="number" />
+        </div>
+
+        <div>
+            <label for="period">保存期間(分)</label>
+            <input name="period" id="period" type="number" />
+        </div>
+
+        <div>
+            <label for="library">図書館選択</label>
+            <a name="library" href="https://calil.jp/settings" target="_blank">カリール設定</a>
+        </div>
+
+        <div class="setting">
+            <button id="button_cancel">キャンセル</button>
+            <button id="button_save">保存</button>
+        </div>
+    </div>
+
+    <script src="./js/config.js"></script>
+    <script src="./js/popup.js" defer></script>
+</body>
+
+</html>
