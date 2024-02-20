@@ -1,6 +1,6 @@
 {
   "name": "Amazon Page Customizer",
-  "description": "Display minimum price.",
+  "description": "Amazonを使っていて、追加でほしい機能を実装したものです。",
   "version": "0.1",
   "manifest_version": 3,
   "icons": {
