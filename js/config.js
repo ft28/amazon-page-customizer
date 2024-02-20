@@ -66,7 +66,7 @@ class Config {
         return this._config["detail"]["num_parallels"];
     }
     get limitNumParallelsMin() {
-        return this._limits["num_paralells_min"];
+        return this._limits["num_parallels_min"];
     }
 
     get limitNumParallelsMax() {
