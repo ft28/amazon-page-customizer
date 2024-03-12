@@ -2,18 +2,18 @@ function insertOtherSiteUrls() {
     const base = document.querySelector("span#productTitle");
     const title = base.innerHTML.trim();
 
-    const baseMercari = "https://jp.mercari.com/search?keyword=";
-    const captionMercari = "メルカリ";
+    const targets = [
+        ["https://jp.mercari.com/search?keyword=", "メルカリ"],
+        ["https://auctions.yahoo.co.jp/search/search?p=", "ヤフオク"],
+        ["https://shopping.bookoff.co.jp/search/keyword/", "BookOff"],
+        ["https://www.suruga-ya.jp/search?category=&search_word=", "駿河屋"],
+        ["https://calil.jp/search?q=", "カリール"],
+    ];
 
-    const baseYahoo = "https://auctions.yahoo.co.jp/search/search?p=";
-    const captionYahoo = "ヤフオク";
-
-    const baseCalil = "https://calil.jp/search?q=";
-    const captionCalil = "カリール";
-
-    insertLinkUrl(baseMercari, captionMercari, title);
-    insertLinkUrl(baseYahoo, captionYahoo, title);
-    insertLinkUrl(baseCalil, captionCalil, title)
+    targets.forEach((target) => {
+        const [baseUrl, caption] = target;
+        insertLinkUrl(baseUrl, caption, title);
+    });
 
     function insertLinkUrl(baseUrl, caption, title) {
         const targetDiv = document.querySelector("div#averageCustomerReviews_feature_div");
