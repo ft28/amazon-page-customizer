@@ -5,7 +5,7 @@ async function main() {
     const regWishList = new RegExp(wishListUrlRe);
     const regDetailUrl = new RegExp(detailUrlRe);
 
-    const config = await Config.load();
+    const config = await ConfigAmazon.load();
     const url = window.location.href;
 
     if (isTarget(url, regWishList) && config.enableWishList) {

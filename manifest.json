@@ -1,20 +1,24 @@
 {
   "name": "Amazon Page Customizer",
-  "description": "Amazonを使っていて、追加でほしい機能を実装したものです。",
-  "version": "0.1",
+  "description": "Amazonに追加でほしい機能を実装したものです。",
+  "version": "0.3",
   "manifest_version": 3,
   "icons": {
     "16": "./images/icon_16x16.png",
     "48": "./images/icon_48x48.png"
   },
-  "action": {
-    "default_title": "amazon page customizer",
-    "default_icon": "./images/icon_48x48.png",
-    "default_popup": "popup.html"
-  },
+  "host_permissions": [
+    "https://www.amazon.co.jp/",
+    "https://jp.mercari.com/"
+  ],
   "permissions": [
+    "tabs",
     "storage"
   ],
+  "background": {
+    "service_worker": "./js/background.js"
+  },
+  "action": {},
   "content_scripts": [
     {
       "matches": [
