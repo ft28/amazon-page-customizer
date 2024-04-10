@@ -148,27 +148,36 @@ function insertUsedPriceToWishList(config) {
   }
 
   function getPrice(dom) {
-    const base = dom.querySelector("div.olp-text-box");
-
-    const usedPrice = getUsedPrice(base);
-    console.log("usedPrice:" + usedPrice);
-    if (usedPrice === undefined) {
-      return "----";
+    let usedPrice = getPriceV1(dom);
+    if (usedPrice == undefined) {
+      usedPrice = getPriceV2(dom);
     }
 
-    const postagePrice = getPostagePrice(base);
+    if (usedPrice == undefined) {
+      return "------";
+    }
+    return usedPrice;
+  }
+
+  function getPriceV1(dom) {    
+    const base = dom.querySelector("div.olp-text-box");
+    const usedPrice = getUsedPriceV1(base);
+    console.log("usedPrice:" + usedPrice);
+
+    if (usedPrice === undefined) {
+      return undefined;
+    }
+    const postagePrice = getPostagePriceV1(base);
     console.log("postagePrice:" + postagePrice);
 
     const total = usedPrice + postagePrice;
     return "中古価格(送料込み) ￥" + total.toLocaleString();
   }
 
-  function getUsedPrice(base) {
+  function getUsedPriceV1(base) {
     if (base === null) {
       return undefined;
     }
-
-    // const strPrice = base.querySelector("span.a-size-base").innerHTML;
     const strPrice = base.querySelector("span.a-price-whole").innerHTML;
     if (strPrice === null) {
       return undefined;
@@ -176,7 +185,7 @@ function insertUsedPriceToWishList(config) {
     return parseInt(strPrice.replace(/[^0-9]/g, ''));
   }
 
-  function getPostagePrice(base) {
+  function getPostagePriceV1(base) {
     const spans = base.querySelectorAll("span");
     const strPrice = spans[8].innerHTML;
     if (strPrice.indexOf("無料") >= 0) {
@@ -187,4 +196,48 @@ function insertUsedPriceToWishList(config) {
       return 0;
     }
   }
+
+  function getPriceV2(dom) {    
+    const usedPrice = getUsedPriceV2(dom);
+    console.log("usedPrice:" + usedPrice);
+
+    if (usedPrice === undefined) {
+      return undefined;
+    }
+    const postagePrice = getPostagePriceV2(dom);
+    console.log("postagePrice:" + postagePrice);
+
+    const total = usedPrice + postagePrice;
+    return "中古価格(送料込み) ￥" + total.toLocaleString();
+  }
+
+  function getUsedPriceV2(dom) {
+    const xpathUsedPrice = '//*[@id="dynamic-aod-ingress-box"]/div/div[2]/a/span/span[3]/span[2]/span[2]';
+    let it = document.evaluate(xpathUsedPrice, dom, null, XPathResult.ANY_TYPE, null);
+    try {
+      const nodeValue = it.iterateNext().innerHTML;
+      return parseInt(nodeValue.replace(",", ""));
+    } catch {
+      console.log("error");
+      return undefined;
+    }
+  }
+
+  function getPostagePriceV2(dom) {
+    const xpathPostagePrice = '//*[@id="dynamic-aod-ingress-box"]/div/div[2]/a/span/span[5]/span';
+    it = document.evaluate(xpathPostagePrice, dom, null, XPathResult.ANY_TYPE, null);
+    try {
+      const nodeValue = it.iterateNext().innerHTML;
+      if (nodeValue.indexOf("無料") >= 0) {
+        return 0;
+      } else if (nodeValue.indexOf("配送料") >= 0) {
+        return parseInt(nodeValue.replace(/[^0-9]/g, ''));
+      } else {
+        return 0;
+      }
+    } catch {
+      console.log("error");
+      return 0;
+    }
+  }   
 }

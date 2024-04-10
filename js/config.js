@@ -19,11 +19,63 @@ const limits = {
     "num_parallels_max": 5,
 }
 
-class Config {
+class ConfigSearch {
+    static Genres = Object.freeze([
+        {"name": "all",   "caption": "全部"},
+        {"name": "book",  "caption": "書籍"},
+        {"name": "comic", "caption": "コミック"}
+    ]);
+
+    constructor(id, caption, baseUrl, book, comic) {
+        this._id = id;
+        this._caption = caption;
+        this._baseUrl = baseUrl;
+        this._all = "";
+        this._book = book;
+        this._comic = comic;
+    }
+
+    get id() {
+        return this._id;
+    }
+    get caption() {
+        return this._caption;
+    }
+
+    get baseUrl() {
+        return this._baseUrl;
+    }
+
+    set mode(_mode) {
+        this._mode = _mode;
+    }
+
+    getSearchUrl(keyword, targetGenre) {
+        let genre = this._all;
+        if (targetGenre == "book") {
+            genre = this._book;
+        }
+        if (targetGenre == "comic") {
+            genre = this._comic;
+        }
+        console.log(genre);
+        return this._baseUrl.replace("__option__", genre) + keyword;
+    }
+}
+
+const siteConfigs = [
+    new ConfigSearch("mercari", "メルカリ", "https://jp.mercari.com/search?__option__keyword=",                 "category_id=72&"),
+    new ConfigSearch("yahoo",   "ヤフオク", "https://auctions.yahoo.co.jp/search/search?__option__p=",          "auccat=21600&"),
+    new ConfigSearch("bookoff", "BookOff", "https://shopping.bookoff.co.jp/search/stock/u/__option__keyword/", "genre/12/"),
+    new ConfigSearch("suruga",  "駿河屋",   "https://www.suruga-ya.jp/search?category=__option__&search_word=", "7"),
+    new ConfigSearch("calil",   "カリール", "https://calil.jp/search?__option__q=",                             "")
+];
+
+class ConfigAmazon {
     static key = "config";
     constructor(_config) {
         // リセットを考えてデフォルト値を変えないようにdeep copyしておく
-        this._config = Config.copy(_config);
+        this._config = ConfigAmazon.copy(_config);
         this._limits = limits;
     }
 
@@ -116,14 +168,14 @@ class Config {
     }
     async save() {
         const data = {};
-        data[Config.key] = this._config;
+        data[ConfigAmazon.key] = this._config;
         await chrome.storage.local.set(data, () => {
             console.log("update local storage config");
         });
     }
 
     reset() {
-        this._config = Config.copy(Config.defaultConfig);
+        this._config = ConfigAmazon.copy(ConfigAmazon.defaultConfig);
         this.save();
     }
 
@@ -134,11 +186,11 @@ class Config {
     static async load() {
         // 後で変更するのでコピーを保存
         let _config = defaultConfig;
-        const storageConfig = await chrome.storage.local.get(Config.key);
+        const storageConfig = await chrome.storage.local.get(ConfigAmazon.key);
 
-        if (Config.key in storageConfig) {
-            _config = storageConfig[Config.key];
+        if (ConfigAmazon.key in storageConfig) {
+            _config = storageConfig[ConfigAmazon.key];
         }
-        return new Config(_config);
+        return new ConfigAmazon(_config);
     }
 }
