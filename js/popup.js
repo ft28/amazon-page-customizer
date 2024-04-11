@@ -8,12 +8,13 @@ async function run() {
     const inputPeriod = document.getElementById("period");
     const inputNumParallels = document.getElementById("num_parallels");
 
+    const inputArea = document.getElementById("search_area");
     const inputSearch = document.getElementById("search");
+    const inputWordButtons = document.getElementById("word_buttons");
 
     const buttonSave = document.getElementById("button_save");
     const buttonCancel = document.getElementById("button_cancel");
     
-    const buttonSearch = document.getElementById("button_search");
     const buttonSetting = document.getElementById("button_setting");
 
     initDisplay();
@@ -53,15 +54,66 @@ async function run() {
     buttonCancel.addEventListener("click", (event) => {
         window.close();
     });
-     
+    
+    // 入力中にenter したら検索
     inputSearch.addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
             runSearch(event);
         }  
         return false;
     });    
-    buttonSearch.addEventListener("click", runSearch);
 
+    // inputから外れたら、キーワードをボタン表示
+    inputSearch.addEventListener("blur", (event) => {
+        inputWordButtons.style.display = "inline-block";
+        inputSearch.style.display = "none";
+
+        const words = inputSearch.value.split(' ');
+        // clear all child
+        while (inputWordButtons.firstChild) {
+            inputWordButtons.firstChild.remove();
+        }
+
+        let wordIndex = 0;
+        for (let i=0; i<words.length; i++) {
+            if (words[i] == "") {
+                continue;
+            }
+            const span = document.createElement("span");
+            const text = document.createElement("span");
+            text.innerHTML = words[i];
+            let selectorIndex = wordIndex + words[i].length;
+            wordIndex = selectorIndex + 1;
+            text.addEventListener('click', (event) => {
+                inputArea.click();
+                inputSearch.setSelectionRange(selectorIndex, selectorIndex);
+                console.log(selectorIndex);
+                event.stopPropagation();
+            });
+            const button = document.createElement('button');
+            button.innerHTML = "x";
+            span.appendChild(text);
+            span.appendChild(button);
+            button.addEventListener('click', (event) => {
+                button.parentElement.remove();
+                event.stopPropagation();
+            });
+            inputWordButtons.appendChild(span);
+        }
+    });
+
+    // inputareaがクリックされたら、inputテキスト表示
+    inputArea.addEventListener("click", (event) => {
+        inputWordButtons.style.display = "none";
+        const words = [];
+        const buttons = inputWordButtons.children;
+        for (let i=0; i<buttons.length; i++) {
+            words.push(buttons[i].firstChild.textContent);
+        }
+        inputSearch.value = words.join(" ");
+        inputSearch.style.display = "inline-block";
+        inputSearch.focus();
+    });
 
     buttonSetting.addEventListener("click", (event) => {
         const settingView = document.getElementById("setting_view");
